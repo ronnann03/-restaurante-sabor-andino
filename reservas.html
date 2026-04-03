@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reservas – Sabor Andino</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--terracota:#C0451A;--gold:#D4A843;--cream:#F5EDD8;--dark:#1A1208;--brown:#5C2E0A;--sand:#E8D5A3;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Crimson Pro',serif;background:var(--dark);color:var(--cream);overflow-x:hidden;}
+    img{display:block;max-width:100%;}
+    a{text-decoration:none;}
+
+    /* NAV */
+    nav.topnav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:rgba(26,18,8,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,168,67,.2);}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;color:var(--gold);letter-spacing:2px;text-transform:uppercase;}
+    .nav-logo span{color:var(--terracota);}
+    .nav-links{list-style:none;display:flex;gap:2.2rem;}
+    .nav-links a{color:var(--cream);font-size:.9rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:300;transition:color .3s;}
+    .nav-links a:hover{color:var(--gold);}
+    .nav-links .btn-reserva{background:var(--terracota);color:var(--cream)!important;padding:.45rem 1.4rem;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--cream);border-radius:2px;transition:transform .3s,opacity .3s;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{display:none;flex-direction:column;position:fixed;top:60px;left:0;right:0;z-index:199;background:rgba(26,18,8,.98);border-bottom:1px solid rgba(212,168,67,.2);}
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{color:var(--cream);font-size:1.05rem;letter-spacing:2px;text-transform:uppercase;padding:1.1rem 2rem;border-bottom:1px solid rgba(212,168,67,.08);transition:background .2s,color .2s;}
+    .mobile-menu a:hover{background:rgba(212,168,67,.07);color:var(--gold);}
+    .mobile-menu .btn-reserva-m{background:var(--terracota);color:var(--cream)!important;text-align:center;margin:1rem 2rem 1.5rem;padding:.8rem;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);}
+
+    /* LAYOUT PRINCIPAL */
+    .reservas-layout{
+      display:grid; grid-template-columns:1fr 1fr;
+      min-height:100vh; padding-top:68px;
+    }
+
+    /* PANEL IZQUIERDO */
+    .reservas-left{
+      background:
+        linear-gradient(135deg,rgba(26,18,8,.88) 0%,rgba(92,46,10,.7) 100%),
+        url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1000&q=80') center/cover;
+      padding:5rem 4rem;
+      display:flex;flex-direction:column;justify-content:center;
+    }
+    .left-tag{font-size:.72rem;letter-spacing:5px;text-transform:uppercase;color:var(--terracota);margin-bottom:.9rem;}
+    .left-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,3.2rem);line-height:1.2;margin-bottom:1.3rem;}
+    .left-title em{font-style:italic;color:var(--gold);}
+    .left-desc{font-size:1.05rem;color:var(--sand);line-height:1.8;font-weight:300;margin-bottom:2.5rem;}
+    .info-list{display:flex;flex-direction:column;gap:1.4rem;}
+    .info-item{display:flex;align-items:flex-start;gap:1.1rem;}
+    .info-icon{width:38px;height:38px;border:1px solid rgba(212,168,67,.4);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;color:var(--gold);}
+    .info-label{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--terracota);margin-bottom:.25rem;}
+    .info-value{font-size:.98rem;color:var(--cream);line-height:1.5;}
+
+    /* PANEL DERECHO / FORMULARIO */
+    .reservas-right{background:#0D0A05;padding:5rem 4rem;display:flex;flex-direction:column;justify-content:center;overflow-y:auto;}
+    .form-title{font-family:'Playfair Display',serif;font-size:1.75rem;color:var(--cream);margin-bottom:.4rem;}
+    .form-subtitle{font-size:.98rem;color:var(--sand);margin-bottom:2.2rem;font-style:italic;}
+    .form-group{margin-bottom:1.3rem;}
+    .form-label{display:block;font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--sand);margin-bottom:.55rem;}
+    .form-input,.form-select,.form-textarea{
+      width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(212,168,67,.2);
+      color:var(--cream);padding:.85rem 1.1rem;font-family:'Crimson Pro',serif;
+      font-size:1rem;transition:all .3s;outline:none;appearance:none;-webkit-appearance:none;
+    }
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold);background:rgba(212,168,67,.05);}
+    .form-select option{background:var(--dark);color:var(--cream);}
+    .form-textarea{resize:vertical;min-height:85px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+
+    /* HORARIOS */
+    .horarios{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;margin-top:.6rem;}
+    .horario-btn{
+      padding:.55rem .4rem;background:rgba(255,255,255,.04);border:1px solid rgba(212,168,67,.2);
+      color:var(--sand);font-family:'Crimson Pro',serif;font-size:.88rem;cursor:pointer;transition:all .3s;text-align:center;
+    }
+    .horario-btn:hover,.horario-btn.selected{background:var(--terracota);border-color:var(--terracota);color:var(--cream);}
+    .horario-btn.disabled{opacity:.35;cursor:not-allowed;text-decoration:line-through;}
+
+    /* SUBMIT */
+    .submit-btn{
+      width:100%;background:var(--terracota);color:var(--cream);border:none;
+      padding:1rem 2rem;font-family:'Crimson Pro',serif;font-size:.95rem;
+      letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s;
+      margin-top:.8rem;clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+    }
+    .submit-btn:hover{background:var(--gold);color:var(--dark);transform:translateY(-2px);}
+
+    /* SUCCESS */
+    .success-msg{display:none;text-align:center;padding:3rem 2rem;animation:fadeIn .5s ease;}
+    .success-icon{font-size:3.5rem;margin-bottom:1rem;}
+    .success-title{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--gold);margin-bottom:.9rem;}
+    .success-text{color:var(--sand);font-size:1.05rem;line-height:1.7;margin-bottom:2rem;}
+    .success-btn{display:inline-block;border:1px solid var(--gold);color:var(--gold);padding:.8rem 2rem;font-size:.82rem;letter-spacing:2px;text-transform:uppercase;transition:all .3s;}
+    .success-btn:hover{background:var(--gold);color:var(--dark);}
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
+    /* TABLET (≤ 992px) */
+    @media(max-width:992px){
+      nav.topnav{padding:1rem 2rem;}
+      .reservas-left{padding:4rem 2.5rem;}
+      .reservas-right{padding:4rem 2.5rem;}
+      .horarios{grid-template-columns:repeat(3,1fr);}
+    }
+
+    /* MÓVIL (≤ 768px) */
+    @media(max-width:768px){
+      nav.topnav{padding:.85rem 1.3rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+
+      /* Layout pasa a columna: info arriba, formulario abajo */
+      .reservas-layout{
+        grid-template-columns:1fr;
+        grid-template-rows:auto 1fr;
+      }
+      .reservas-left{
+        padding:3rem 1.3rem;
+        min-height:auto;
+        /* ocultamos la imagen de fondo en info panel para que sea más compacto */
+      }
+      .reservas-right{
+        padding:2.5rem 1.3rem;
+        justify-content:flex-start;
+      }
+
+      /* formulario: pasar form-row a 1 columna */
+      .form-row{grid-template-columns:1fr;}
+
+      /* horarios: 3 columnas */
+      .horarios{grid-template-columns:repeat(3,1fr);}
+    }
+
+    /* MÓVIL PEQUEÑO (≤ 400px) */
+    @media(max-width:400px){
+      .nav-logo{font-size:1.2rem;}
+      .left-title{font-size:1.7rem;}
+      .form-title{font-size:1.5rem;}
+      /* horarios: 2 columnas */
+      .horarios{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topnav" id="navbar">
+  <a href="index.html" class="nav-logo">Sabor <span>Andino</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="menu.html">Carta</a></li>
+    <li><a href="nosotros.html">Nosotros</a></li>
+    <li><a href="reservas.html" class="btn-reserva">Reservar</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<nav class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Inicio</a>
+  <a href="menu.html">Carta</a>
+  <a href="nosotros.html">Nosotros</a>
+  <a href="reservas.html" class="btn-reserva-m">Reservar Mesa</a>
+</nav>
+
+<div class="reservas-layout">
+
+  <!-- PANEL INFO -->
+  <div class="reservas-left">
+    <div class="left-tag">Reserva tu experiencia</div>
+    <h1 class="left-title">Una mesa<br/>para <em>recordar</em></h1>
+    <p class="left-desc">Reserva con anticipación y asegura tu lugar en una de las mejores experiencias gastronómicas peruanas.</p>
+    <div class="info-list">
+      <div class="info-item">
+        <div class="info-icon">📍</div>
+        <div><div class="info-label">Dirección</div><div class="info-value">Av. La Mar 123, Miraflores<br/>Lima 15074, Perú</div></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">🕐</div>
+        <div><div class="info-label">Horarios</div><div class="info-value">Lun–Vie: 12:00pm – 10:00pm<br/>Sáb–Dom: 11:00am – 11:00pm</div></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">📞</div>
+        <div><div class="info-label">Contacto</div><div class="info-value">(01) 234-5678<br/>hola@saborandino.pe</div></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">✨</div>
+        <div><div class="info-label">Política</div><div class="info-value">Cancelación gratuita hasta 24 h antes. Grupos de 10+ requieren depósito.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL FORMULARIO -->
+  <div class="reservas-right">
+    <div id="formContainer">
+      <h2 class="form-title">Haz tu Reserva</h2>
+      <p class="form-subtitle">Completa los datos y confirmaremos tu reserva.</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nombre</label>
+          <input class="form-input" type="text" id="nombre" placeholder="Tu nombre"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Apellido</label>
+          <input class="form-input" type="text" id="apellido" placeholder="Tu apellido"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Correo Electrónico</label>
+          <input class="form-input" type="email" id="email" placeholder="tu@email.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input class="form-input" type="tel" id="telefono" placeholder="+51 999 999 999"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Fecha</label>
+          <input class="form-input" type="date" id="fecha"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Número de personas</label>
+          <select class="form-select" id="personas">
+            <option value="">Seleccionar</option>
+            <option>1 persona</option><option>2 personas</option><option>3 personas</option>
+            <option>4 personas</option><option>5-6 personas</option>
+            <option>7-10 personas</option><option>Más de 10</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Horario disponible</label>
+        <div class="horarios">
+          <button class="horario-btn" onclick="selHorario(this)">12:00pm</button>
+          <button class="horario-btn" onclick="selHorario(this)">12:30pm</button>
+          <button class="horario-btn disabled">1:00pm</button>
+          <button class="horario-btn" onclick="selHorario(this)">1:30pm</button>
+          <button class="horario-btn" onclick="selHorario(this)">2:00pm</button>
+          <button class="horario-btn disabled">7:00pm</button>
+          <button class="horario-btn" onclick="selHorario(this)">7:30pm</button>
+          <button class="horario-btn" onclick="selHorario(this)">8:00pm</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ocasión especial</label>
+        <select class="form-select">
+          <option value="">Sin ocasión especial</option>
+          <option>Cumpleaños</option><option>Aniversario</option>
+          <option>Reunión de negocios</option><option>Cena romántica</option>
+          <option>Celebración familiar</option><option>Otra</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Solicitudes especiales</label>
+        <textarea class="form-textarea" placeholder="Alergias, preferencias de mesa, pedidos especiales..."></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="submitReserva()">Confirmar Reserva</button>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">🎉</div>
+      <h3 class="success-title">¡Reserva Confirmada!</h3>
+      <p class="success-text">Hemos recibido tu solicitud y te enviaremos la confirmación a tu correo. ¡Nos vemos pronto!</p>
+      <a href="index.html" class="success-btn">Volver al Inicio</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* Hamburguesa */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }));
+
+  /* Fecha mínima = hoy */
+  document.getElementById('fecha').min = new Date().toISOString().split('T')[0];
+
+  /* Selección de horario */
+  function selHorario(btn) {
+    if(btn.classList.contains('disabled')) return;
+    document.querySelectorAll('.horario-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  /* Submit */
+  function submitReserva() {
+    const nombre   = document.getElementById('nombre').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const fecha    = document.getElementById('fecha').value;
+    const personas = document.getElementById('personas').value;
+    const horario  = document.querySelector('.horario-btn.selected');
+
+    if(!nombre || !email || !fecha || !personas || !horario) {
+      alert('Por favor completa todos los campos requeridos y selecciona un horario.');
+      return;
+    }
+    document.getElementById('formContainer').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  }
+</script>
+</body>
+</html>

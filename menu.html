@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carta – Sabor Andino</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --terracota:#C0451A; --gold:#D4A843; --cream:#F5EDD8;
+      --dark:#1A1208; --brown:#5C2E0A; --sand:#E8D5A3;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Crimson Pro',serif;background:var(--dark);color:var(--cream);overflow-x:hidden;}
+    img{display:block;max-width:100%;}
+    a{text-decoration:none;}
+
+    /* NAV */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:200;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.1rem 4rem;
+      background:rgba(26,18,8,.95);backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(212,168,67,.2);
+    }
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;color:var(--gold);letter-spacing:2px;text-transform:uppercase;}
+    .nav-logo span{color:var(--terracota);}
+    .nav-links{list-style:none;display:flex;gap:2.2rem;}
+    .nav-links a{color:var(--cream);font-size:.9rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:300;transition:color .3s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);}
+    .nav-links .btn-reserva{background:var(--terracota);color:var(--cream)!important;padding:.45rem 1.4rem;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--cream);border-radius:2px;transition:transform .3s,opacity .3s;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{display:none;flex-direction:column;position:fixed;top:60px;left:0;right:0;z-index:199;background:rgba(26,18,8,.98);border-bottom:1px solid rgba(212,168,67,.2);}
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{color:var(--cream);font-size:1.05rem;letter-spacing:2px;text-transform:uppercase;padding:1.1rem 2rem;border-bottom:1px solid rgba(212,168,67,.08);transition:background .2s,color .2s;}
+    .mobile-menu a:hover{background:rgba(212,168,67,.07);color:var(--gold);}
+    .mobile-menu .btn-reserva-m{background:var(--terracota);color:var(--cream)!important;text-align:center;margin:1rem 2rem 1.5rem;padding:.8rem;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);}
+
+    /* PAGE HERO */
+    .page-hero{
+      height:40vh;min-height:260px;
+      background:
+        linear-gradient(135deg,rgba(26,18,8,.9) 50%,rgba(192,69,26,.4) 100%),
+        url('https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=1400&q=80') center/cover;
+      display:flex;align-items:flex-end;padding:4rem;
+    }
+    .page-tag{font-size:.72rem;letter-spacing:5px;text-transform:uppercase;color:var(--terracota);margin-bottom:.8rem;}
+    .page-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,4rem);font-weight:900;}
+    .page-title em{font-style:italic;color:var(--gold);}
+
+    /* MENU PAGE */
+    .menu-page{padding:3rem 4rem;max-width:1300px;margin:0 auto;}
+
+    /* CATEGORY NAV */
+    .cat-nav{display:flex;gap:0;border-bottom:2px solid rgba(212,168,67,.15);margin-bottom:3.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+    .cat-btn{
+      background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;
+      color:var(--sand);padding:1rem 1.8rem;font-family:'Crimson Pro',serif;
+      font-size:.9rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:all .3s;
+    }
+    .cat-btn.active,.cat-btn:hover{color:var(--gold);border-bottom-color:var(--gold);}
+
+    /* CATEGORY SECTION */
+    .menu-cat-section{display:none;}
+    .menu-cat-section.active{display:block;}
+    .cat-header{display:flex;align-items:center;gap:2rem;margin-bottom:2.5rem;}
+    .cat-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.2rem);color:var(--cream);}
+    .cat-title em{color:var(--gold);font-style:italic;}
+    .cat-line{flex:1;height:1px;background:linear-gradient(to right,rgba(212,168,67,.4),transparent);}
+    .cat-desc{font-size:1rem;color:var(--sand);font-style:italic;margin-bottom:2rem;}
+
+    /* DISH LIST */
+    .dish-list{display:grid;gap:1.2rem;}
+    .dish-item{
+      display:grid;grid-template-columns:110px 1fr auto;gap:1.3rem;align-items:center;
+      padding:1.3rem;border:1px solid rgba(212,168,67,.1);background:rgba(255,255,255,.02);
+      transition:all .3s;cursor:pointer;
+    }
+    .dish-item:hover{border-color:rgba(212,168,67,.4);background:rgba(212,168,67,.04);transform:translateX(5px);}
+    .dish-img{width:110px;height:82px;object-fit:cover;filter:sepia(10%);}
+    .dish-tags{display:flex;gap:.4rem;margin-bottom:.35rem;flex-wrap:wrap;}
+    .dish-tag{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;padding:.12rem .45rem;border:1px solid;}
+    .tag-popular{color:var(--terracota);border-color:var(--terracota);}
+    .tag-veggie{color:#3A6B35;border-color:#3A6B35;}
+    .tag-spicy{color:#FF6B35;border-color:#FF6B35;}
+    .tag-chef{color:var(--gold);border-color:var(--gold);}
+    .dish-name{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--cream);margin-bottom:.25rem;}
+    .dish-desc{font-size:.9rem;color:var(--sand);line-height:1.5;font-style:italic;}
+    .dish-price-col{text-align:right;min-width:72px;}
+    .dish-price{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);display:block;}
+    .dish-currency{font-size:.75rem;color:var(--sand);letter-spacing:1px;}
+
+    /* BEBIDAS */
+    .bebidas-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+    .bebida-card{padding:1.4rem;border:1px solid rgba(212,168,67,.1);display:flex;justify-content:space-between;align-items:center;transition:all .3s;}
+    .bebida-card:hover{border-color:rgba(212,168,67,.4);background:rgba(212,168,67,.04);}
+    .bebida-name{font-size:1.05rem;color:var(--cream);margin-bottom:.2rem;}
+    .bebida-desc{font-size:.82rem;color:var(--sand);font-style:italic;}
+    .bebida-price{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);flex-shrink:0;margin-left:1rem;}
+
+    /* FOOTER MINI */
+    .footer-mini{background:#0D0A05;border-top:1px solid rgba(212,168,67,.1);padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-size:.9rem;color:var(--sand);}
+    .footer-mini a{color:var(--gold);}
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
+    /* TABLET (≤ 992px) */
+    @media(max-width:992px){
+      nav{padding:1rem 2rem;}
+      .page-hero{padding:3rem 2rem;}
+      .menu-page{padding:2.5rem 2rem;}
+      .footer-mini{padding:2rem;}
+    }
+
+    /* MÓVIL (≤ 768px) */
+    @media(max-width:768px){
+      nav{padding:.85rem 1.3rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+
+      .page-hero{padding:2.5rem 1.3rem;height:35vh;}
+
+      .menu-page{padding:2rem 1.3rem;}
+      .cat-nav{margin-bottom:2.5rem;}
+      .cat-btn{padding:.75rem 1.1rem;font-size:.8rem;}
+
+      /* platos: foto más pequeña en móvil */
+      .dish-item{
+        grid-template-columns:80px 1fr;
+        grid-template-rows:auto auto;
+        gap:1rem;
+      }
+      .dish-img{width:80px;height:68px;}
+      .dish-price-col{
+        grid-column:2; display:flex;
+        align-items:center;gap:1rem;
+      }
+
+      /* bebidas en 1 columna */
+      .bebidas-grid{grid-template-columns:1fr;}
+
+      .footer-mini{flex-direction:column;text-align:center;padding:1.8rem 1.3rem;}
+    }
+
+    /* MÓVIL PEQUEÑO (≤ 400px) */
+    @media(max-width:400px){
+      .nav-logo{font-size:1.2rem;}
+      .cat-btn{padding:.6rem .8rem;font-size:.75rem;}
+      .dish-item{grid-template-columns:1fr;}
+      .dish-img{width:100%;height:150px;}
+      .dish-price-col{grid-column:1;}
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">Sabor <span>Andino</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="menu.html" class="active">Carta</a></li>
+    <li><a href="nosotros.html">Nosotros</a></li>
+    <li><a href="reservas.html" class="btn-reserva">Reservar</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<nav class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Inicio</a>
+  <a href="menu.html">Carta</a>
+  <a href="nosotros.html">Nosotros</a>
+  <a href="reservas.html" class="btn-reserva-m">Reservar Mesa</a>
+</nav>
+
+<div class="page-hero">
+  <div>
+    <div class="page-tag">Gastronomía peruana auténtica</div>
+    <h1 class="page-title">Nuestra <em>Carta</em></h1>
+  </div>
+</div>
+
+<main class="menu-page">
+  <nav class="cat-nav">
+    <button class="cat-btn active" onclick="showCat('entradas',this)">Entradas</button>
+    <button class="cat-btn" onclick="showCat('fondos',this)">Platos de Fondo</button>
+    <button class="cat-btn" onclick="showCat('arroces',this)">Arroces y Fideos</button>
+    <button class="cat-btn" onclick="showCat('postres',this)">Postres</button>
+    <button class="cat-btn" onclick="showCat('bebidas',this)">Bebidas</button>
+  </nav>
+
+  <!-- ENTRADAS -->
+  <section class="menu-cat-section active" id="entradas">
+    <div class="cat-header"><h2 class="cat-title">Entradas <em>y Ceviches</em></h2><div class="cat-line"></div></div>
+    <p class="cat-desc">Los mejores sabores del mar y la tierra para despertar el apetito.</p>
+    <div class="dish-list">
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=300&q=80" alt="Ceviche"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-popular">Popular</span></div>
+          <div class="dish-name">Ceviche Clásico</div>
+          <div class="dish-desc">Pescado fresco en leche de tigre con ají limo, cebolla morada, cilantro. Con choclo y camote.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 38</span><span class="dish-currency">soles</span></div>
+      </div>
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1553163147-622ab57be1c7?w=300&q=80" alt="Tiradito"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-chef">Chef</span></div>
+          <div class="dish-name">Tiradito Nikkei</div>
+          <div class="dish-desc">Finas láminas de pescado en salsa ponzu con ají amarillo, sésamo y aceite de trufa.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 45</span><span class="dish-currency">soles</span></div>
+      </div>
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=300&q=80" alt="Causa"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-veggie">Vegetariano</span></div>
+          <div class="dish-name">Causa Limeña</div>
+          <div class="dish-desc">Papa amarilla sazonada con ají amarillo rellena de ensalada de verduras, palta y huevo.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 28</span><span class="dish-currency">soles</span></div>
+      </div>
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=300&q=80" alt="Leche de Tigre"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-spicy">Picante</span><span class="dish-tag tag-popular">Popular</span></div>
+          <div class="dish-name">Leche de Tigre</div>
+          <div class="dish-desc">Shot de leche de tigre con mariscos, ají limo y trocitos de pescado.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 22</span><span class="dish-currency">soles</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FONDOS -->
+  <section class="menu-cat-section" id="fondos">
+    <div class="cat-header"><h2 class="cat-title">Platos de <em>Fondo</em></h2><div class="cat-line"></div></div>
+    <p class="cat-desc">Recetas tradicionales preparadas con ingredientes frescos y técnicas ancestrales.</p>
+    <div class="dish-list">
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=300&q=80" alt="Lomo"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-popular">Popular</span></div>
+          <div class="dish-name">Lomo Saltado</div>
+          <div class="dish-desc">Tiras de lomo fino salteadas al wok con tomate, cebolla morada y ají amarillo. Con arroz y papas.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 52</span><span class="dish-currency">soles</span></div>
+      </div>
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1534482421-64566f976cfa?w=300&q=80" alt="Ají de Gallina"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-chef">Chef</span></div>
+          <div class="dish-name">Ají de Gallina</div>
+          <div class="dish-desc">Pollo deshilachado en cremosa salsa de ají amarillo con nueces y queso. Con arroz y papa.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 42</span><span class="dish-currency">soles</span></div>
+      </div>
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&q=80" alt="Anticucho"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-popular">Popular</span><span class="dish-tag tag-spicy">Picante</span></div>
+          <div class="dish-name">Anticuchos de Corazón</div>
+          <div class="dish-desc">Corazón de res marinado en ají panca y especias, asado al carbón. Con papas doradas y choclo.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 36</span><span class="dish-currency">soles</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARROCES -->
+  <section class="menu-cat-section" id="arroces">
+    <div class="cat-header"><h2 class="cat-title">Arroces <em>y Fideos</em></h2><div class="cat-line"></div></div>
+    <p class="cat-desc">La influencia asiática que enamoró a la cocina criolla peruana.</p>
+    <div class="dish-list">
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=300&q=80" alt="Arroz"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-popular">Popular</span></div>
+          <div class="dish-name">Arroz con Mariscos</div>
+          <div class="dish-desc">Arroz cremoso con langostinos, pulpo, calamares y mejillones en salsa a la chalaca.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 58</span><span class="dish-currency">soles</span></div>
+      </div>
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=300&q=80" alt="Tallarines"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-veggie">Vegetariano</span></div>
+          <div class="dish-name">Tallarines Verdes</div>
+          <div class="dish-desc">Pasta en salsa de albahaca, queso, nueces y ajo. Servido con bistec apanado o papas al horno.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 34</span><span class="dish-currency">soles</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POSTRES -->
+  <section class="menu-cat-section" id="postres">
+    <div class="cat-header"><h2 class="cat-title">Postres <em>Peruanos</em></h2><div class="cat-line"></div></div>
+    <p class="cat-desc">Dulces tradiciones que endulzan cualquier ocasión.</p>
+    <div class="dish-list">
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=300&q=80" alt="Suspiro"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-popular">Popular</span></div>
+          <div class="dish-name">Suspiro a la Limeña</div>
+          <div class="dish-desc">Manjar blanco cubierto con merengue de oporto y canela.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 18</span><span class="dish-currency">soles</span></div>
+      </div>
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=300&q=80" alt="Picarones"/>
+        <div class="dish-info">
+          <div class="dish-tags"></div>
+          <div class="dish-name">Picarones</div>
+          <div class="dish-desc">Rosquillas de camote y zapallo fritas, bañadas en miel de higos con especias.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 15</span><span class="dish-currency">soles</span></div>
+      </div>
+      <div class="dish-item">
+        <img class="dish-img" src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&q=80" alt="Tres Leches"/>
+        <div class="dish-info">
+          <div class="dish-tags"><span class="dish-tag tag-chef">Chef</span></div>
+          <div class="dish-name">Tres Leches Andino</div>
+          <div class="dish-desc">Bizcocho bañado en tres leches con lúcuma y crema chantilly.</div>
+        </div>
+        <div class="dish-price-col"><span class="dish-price">S/ 20</span><span class="dish-currency">soles</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEBIDAS -->
+  <section class="menu-cat-section" id="bebidas">
+    <div class="cat-header"><h2 class="cat-title"><em>Bebidas</em> y Cocteles</h2><div class="cat-line"></div></div>
+    <p class="cat-desc">Desde el clásico Pisco Sour hasta chicha morada artesanal.</p>
+    <div class="bebidas-grid">
+      <div class="bebida-card"><div><div class="bebida-name">Pisco Sour</div><div class="bebida-desc">Pisco quebranta, limón, clara de huevo, angostura</div></div><div class="bebida-price">S/ 28</div></div>
+      <div class="bebida-card"><div><div class="bebida-name">Chicha Morada</div><div class="bebida-desc">Maíz morado, piña, canela, clavo de olor, limón</div></div><div class="bebida-price">S/ 12</div></div>
+      <div class="bebida-card"><div><div class="bebida-name">Maracuyá Sour</div><div class="bebida-desc">Pisco, maracuyá fresco, jarabe de goma, clara</div></div><div class="bebida-price">S/ 30</div></div>
+      <div class="bebida-card"><div><div class="bebida-name">Inca Cola</div><div class="bebida-desc">La bebida nacional del Perú, refrescante y única</div></div><div class="bebida-price">S/ 8</div></div>
+      <div class="bebida-card"><div><div class="bebida-name">Agua de Coco</div><div class="bebida-desc">Natural, fresca, directamente del coco</div></div><div class="bebida-price">S/ 10</div></div>
+      <div class="bebida-card"><div><div class="bebida-name">Chilcano de Pisco</div><div class="bebida-desc">Pisco, ginger ale, limón, gotas de angostura</div></div><div class="bebida-price">S/ 25</div></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer-mini">
+  <span>© 2026 Sabor Andino · Miraflores, Lima</span>
+  <a href="reservas.html">¿Listo para pedir? → Reserva tu mesa</a>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }));
+
+  function showCat(id, btn) {
+    document.querySelectorAll('.menu-cat-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
