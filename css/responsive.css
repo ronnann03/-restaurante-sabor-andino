@@ -1,0 +1,117 @@
+/* ========================================================
+   RESPONSIVE
+   desktop > 992px | tablet 769–992px | móvil ≤ 768px | xs ≤ 400px
+   ======================================================== */
+
+/* ---- TABLET (≤ 992px) ---- */
+@media (max-width: 992px) {
+  .navbar        { padding: 1rem 2rem; }
+  .about         { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 3rem; }
+  .about-img     { height: 380px; }
+  .menu-section  { padding: 4rem 2rem; }
+  .testimonials  { padding: 4rem 2rem; }
+  .footer-main   { grid-template-columns: 1fr 1fr; padding: 3rem 2rem; }
+  .footer-mini   { padding: 1.8rem 2rem; }
+
+  /* carta */
+  .menu-page    { padding: 2.5rem 2rem; }
+  /* nosotros */
+  .story        { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 3rem; }
+  .story-sticky { position: static; }
+  .story-img    { height: 340px; }
+  .values       { padding: 4rem 2rem; }
+  .values-grid  { grid-template-columns: 1fr 1fr; }
+  .team         { padding: 4rem 2rem; }
+  .team-grid    { grid-template-columns: 1fr 1fr; }
+  .cta-band     { padding: 4rem 2rem; }
+  /* reservas */
+  .reservas-left  { padding: 4rem 2.5rem; }
+  .reservas-right { padding: 4rem 2.5rem; }
+  .horarios       { grid-template-columns: repeat(3, 1fr); }
+  /* page hero */
+  .page-hero { padding: 3rem 2rem; }
+}
+
+/* ---- MÓVIL (≤ 768px) ---- */
+@media (max-width: 768px) {
+  /* nav */
+  .navbar     { padding: .85rem 1.3rem; }
+  .nav-links  { display: none; }
+  .hamburger  { display: flex; }
+
+  /* hero */
+  .hero       { padding: 5.5rem 1.2rem 3rem; }
+  .hero-tag   { font-size: .63rem; letter-spacing: 3px; }
+  .hero-btns  { flex-direction: column; align-items: center; }
+  .btn-primary,
+  .btn-outline { width: 100%; max-width: 280px; text-align: center; }
+
+  /* about */
+  .about        { padding: 3.5rem 1.3rem; gap: 2.5rem; }
+  .about-img    { height: 270px; }
+  .about-badge  { width: 86px; height: 86px; bottom: -16px; right: -10px; }
+  .about-badge .year { font-size: 1.35rem; }
+  .about-img-accent { display: none; }
+  .about-stats  { gap: 1.2rem; }
+
+  /* menú preview */
+  .menu-section { padding: 3rem 1.3rem; }
+  .menu-tabs    { justify-content: flex-start; padding-bottom: .5rem; }
+  .menu-tab     { padding: .65rem 1rem; font-size: .8rem; }
+  .menu-grid    { grid-template-columns: 1fr; }
+
+  /* testimonios */
+  .testimonials     { padding: 3rem 1.3rem; }
+  .testimonials::before { font-size: 9rem; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+
+  /* footer */
+  .footer-main   { grid-template-columns: 1fr; padding: 2.5rem 1.3rem; gap: 2rem; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+  .footer-mini   { flex-direction: column; text-align: center; padding: 1.8rem 1.3rem; }
+
+  /* carta */
+  .menu-page  { padding: 2rem 1.3rem; }
+  .cat-nav    { margin-bottom: 2.5rem; }
+  .cat-btn    { padding: .75rem 1.1rem; font-size: .8rem; }
+  .dish-item  { grid-template-columns: 80px 1fr; }
+  .dish-img   { width: 80px; height: 68px; }
+  .dish-price-col { grid-column: 2; display: flex; align-items: center; gap: 1rem; }
+  .bebidas-grid { grid-template-columns: 1fr; }
+
+  /* nosotros */
+  .story        { padding: 3.5rem 1.3rem; gap: 2.5rem; }
+  .story-img    { height: 260px; }
+  .values       { padding: 3rem 1.3rem; }
+  .values-grid  { grid-template-columns: 1fr; gap: .5rem; }
+  .team         { padding: 3rem 1.3rem; }
+  .team-grid    { grid-template-columns: 1fr; }
+  .team-img     { height: 260px; }
+  .cta-band     { padding: 3.5rem 1.3rem; }
+
+  /* reservas */
+  .reservas-layout  { grid-template-columns: 1fr; }
+  .reservas-left    { padding: 3rem 1.3rem; }
+  .reservas-right   { padding: 2.5rem 1.3rem; justify-content: flex-start; }
+  .form-row         { grid-template-columns: 1fr; }
+  .horarios         { grid-template-columns: repeat(3, 1fr); }
+
+  /* page hero */
+  .page-hero { padding: 2.5rem 1.3rem; height: 35vh; }
+}
+
+/* ---- MÓVIL PEQUEÑO (≤ 400px) ---- */
+@media (max-width: 400px) {
+  .nav-logo      { font-size: 1.2rem; }
+  .hero h1       { font-size: 2rem; }
+  .section-title { font-size: 1.5rem; }
+  .menu-tab      { padding: .55rem .75rem; font-size: .75rem; }
+  .about-stats   { flex-direction: column; gap: .8rem; }
+  .cat-btn       { padding: .6rem .8rem; font-size: .75rem; }
+  .dish-item     { grid-template-columns: 1fr; }
+  .dish-img      { width: 100%; height: 150px; }
+  .dish-price-col { grid-column: 1; }
+  .horarios      { grid-template-columns: repeat(2, 1fr); }
+  .page-title    { font-size: 1.9rem; }
+  .story-year    { font-size: 2.2rem; }
+}
