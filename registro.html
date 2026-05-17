@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro – Sabor Andino</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/base.css"/>
+  <link rel="stylesheet" href="css/nav.css"/>
+  <link rel="stylesheet" href="css/components.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
+  <style>
+    .registro-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      padding-top: 68px;
+    }
+
+    /* Panel izquierdo */
+    .registro-left {
+      background:
+        linear-gradient(135deg, rgba(26,18,8,.88) 0%, rgba(92,46,10,.7) 100%),
+        url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1000&q=80') center/cover;
+      padding: 5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .left-tag   { font-size: .72rem; letter-spacing: 5px; text-transform: uppercase; color: var(--terracota); margin-bottom: .9rem; }
+    .left-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 3.2rem); line-height: 1.2; margin-bottom: 1.3rem; }
+    .left-title em { font-style: italic; color: var(--gold); }
+    .left-desc  { font-size: 1.05rem; color: var(--sand); line-height: 1.8; font-weight: 300; margin-bottom: 2.5rem; }
+
+    .beneficios { display: flex; flex-direction: column; gap: 1.2rem; }
+    .beneficio  { display: flex; align-items: flex-start; gap: 1rem; }
+    .ben-icon   {
+      width: 38px; height: 38px; flex-shrink: 0;
+      border: 1px solid rgba(212,168,67,.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--gold);
+    }
+    .ben-titulo { font-size: .95rem; color: var(--cream); margin-bottom: .15rem; font-weight: 600; }
+    .ben-desc   { font-size: .85rem; color: var(--sand); line-height: 1.5; }
+
+    /* Panel derecho */
+    .registro-right {
+      background: var(--dark2);
+      padding: 5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    /* Éxito */
+    .success-msg { display: none; text-align: center; padding: 3rem 2rem; }
+    .success-icon  { font-size: 3.5rem; margin-bottom: 1rem; }
+    .success-title { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--gold); margin-bottom: .9rem; }
+    .success-text  { color: var(--sand); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; }
+    .success-nombre { color: var(--cream); font-weight: 600; }
+    .success-btn {
+      display: inline-block;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: .8rem 2rem;
+      font-size: .82rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: background .3s, color .3s;
+      margin: .4rem;
+    }
+    .success-btn:hover { background: var(--gold); color: var(--dark); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .registro-layout  { grid-template-columns: 1fr; }
+      .registro-left    { padding: 3rem 1.3rem; }
+      .registro-right   { padding: 2.5rem 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo">Sabor <span>Andino</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="menu.html">Carta</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="reservas.html" class="btn-reserva">Reservar</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <nav class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Inicio</a>
+    <a href="menu.html">Carta</a>
+    <a href="nosotros.html">Nosotros</a>
+    <a href="reservas.html" class="btn-reserva-m">Reservar Mesa</a>
+  </nav>
+
+  <div class="registro-layout">
+
+    <!-- PANEL INFO -->
+    <div class="registro-left">
+      <div class="left-tag">Únete a nuestra comunidad</div>
+      <h1 class="left-title">Regístrate y vive<br/>la experiencia <em>completa</em></h1>
+      <p class="left-desc">Sé parte de la familia Sabor Andino y disfruta de beneficios exclusivos para clientes registrados.</p>
+
+      <div class="beneficios">
+        <div class="beneficio">
+          <div class="ben-icon">🎁</div>
+          <div>
+            <div class="ben-titulo">Ofertas exclusivas</div>
+            <div class="ben-desc">Accede a promociones y descuentos especiales solo para miembros.</div>
+          </div>
+        </div>
+        <div class="beneficio">
+          <div class="ben-icon">📅</div>
+          <div>
+            <div class="ben-titulo">Reservas prioritarias</div>
+            <div class="ben-desc">Tus reservas quedan guardadas y tienes prioridad en fechas especiales.</div>
+          </div>
+        </div>
+        <div class="beneficio">
+          <div class="ben-icon">🍽️</div>
+          <div>
+            <div class="ben-titulo">Historial de visitas</div>
+            <div class="ben-desc">Lleva el registro de todas tus experiencias en Sabor Andino.</div>
+          </div>
+        </div>
+        <div class="beneficio">
+          <div class="ben-icon">✉️</div>
+          <div>
+            <div class="ben-titulo">Novedades primero</div>
+            <div class="ben-desc">Entérate antes que nadie de nuevos platos, eventos y temporadas.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL FORMULARIO -->
+    <div class="registro-right">
+      <div id="formContainer">
+        <h2 class="form-title">Crear cuenta</h2>
+        <p class="form-subtitle">Solo toma un minuto y es completamente gratis.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre *</label>
+            <input class="form-input" type="text" id="reg-nombre" placeholder="Tu nombre"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Apellido *</label>
+            <input class="form-input" type="text" id="reg-apellido" placeholder="Tu apellido"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Correo electrónico *</label>
+          <input class="form-input" type="email" id="reg-email" placeholder="tu@email.com"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input class="form-input" type="tel" id="reg-telefono" placeholder="+51 999 999 999"/>
+        </div>
+
+        <div class="form-group" style="margin-top:.5rem">
+          <label style="display:flex;align-items:flex-start;gap:.7rem;cursor:pointer;color:var(--sand);font-size:.9rem;line-height:1.5">
+            <input type="checkbox" id="reg-terminos" style="margin-top:3px;accent-color:var(--terracota);width:15px;height:15px;flex-shrink:0"/>
+            Acepto recibir noticias y ofertas de Sabor Andino. Puedo cancelar en cualquier momento.
+          </label>
+        </div>
+
+        <button class="submit-btn" onclick="registrarCliente()" style="margin-top:1.2rem">
+          Crear mi cuenta
+        </button>
+
+        <p style="text-align:center;margin-top:1.5rem;font-size:.88rem;color:var(--sand)">
+          ¿Ya eres cliente? <a href="reservas.html" style="color:var(--gold)">Haz una reserva →</a>
+        </p>
+      </div>
+
+      <!-- ÉXITO -->
+      <div class="success-msg" id="successMsg">
+        <div class="success-icon">🎉</div>
+        <h3 class="success-title">¡Bienvenido, <span class="success-nombre" id="successNombre"></span>!</h3>
+        <p class="success-text">Tu cuenta ha sido creada exitosamente. Ya eres parte de la familia Sabor Andino.</p>
+        <a href="reservas.html" class="success-btn">Hacer una reserva</a>
+        <a href="index.html" class="success-btn">Volver al inicio</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    async function registrarCliente() {
+      const nombre   = document.getElementById('reg-nombre').value.trim();
+      const apellido = document.getElementById('reg-apellido').value.trim();
+      const email    = document.getElementById('reg-email').value.trim();
+      const telefono = document.getElementById('reg-telefono').value.trim();
+
+      if (!nombre || !apellido || !email) {
+        alert('Por favor completa los campos obligatorios (*).');
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Por favor ingresa un correo electrónico válido.');
+        return;
+      }
+
+      const btn = document.querySelector('.submit-btn');
+      btn.textContent = 'Registrando...';
+      btn.disabled = true;
+
+      const { data, error } = await db
+        .from('clientes')
+        .insert({ nombre, apellido, email, telefono: telefono || null })
+        .select('id')
+        .single();
+
+      if (error) {
+        if (error.code === '23505') {
+          alert('Este correo ya está registrado. ¡Ya eres parte de la familia!');
+        } else {
+          alert('Error al registrar: ' + error.message);
+        }
+        btn.textContent = 'Crear mi cuenta';
+        btn.disabled = false;
+        return;
+      }
+
+      document.getElementById('successNombre').textContent = nombre;
+      document.getElementById('formContainer').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

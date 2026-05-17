@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clientes – Sabor Andino</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/base.css"/>
+  <link rel="stylesheet" href="css/nav.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
+  <style>
+    .admin-layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 7rem 2rem 4rem;
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .admin-count {
+      font-size: .82rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--sand);
+    }
+    .tabla-wrap {
+      overflow-x: auto;
+      border: 1px solid rgba(212,168,67,.15);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .97rem;
+    }
+    thead {
+      background: rgba(212,168,67,.08);
+      border-bottom: 1px solid rgba(212,168,67,.2);
+    }
+    th {
+      padding: 1rem 1.2rem;
+      text-align: left;
+      font-size: .68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--terracota);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    td {
+      padding: .95rem 1.2rem;
+      color: var(--sand);
+      border-bottom: 1px solid rgba(212,168,67,.07);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(212,168,67,.03); }
+    .td-nombre {
+      font-family: 'Playfair Display', serif;
+      color: var(--cream);
+      font-size: 1.05rem;
+    }
+    .td-email a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: .9rem;
+    }
+    .td-email a:hover { text-decoration: underline; }
+    .td-fecha { font-size: .82rem; color: var(--sand); opacity: .75; }
+    .estado-loading {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--sand);
+      font-style: italic;
+    }
+    .estado-error {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--terracota);
+    }
+    .btn-reload {
+      background: none;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: .5rem 1.3rem;
+      font-family: 'Crimson Pro', serif;
+      font-size: .82rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .3s, color .3s;
+    }
+    .btn-reload:hover { background: var(--gold); color: var(--dark); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo">Sabor <span>Andino</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="menu.html">Carta</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="reservas.html" class="btn-reserva">Reservar</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <nav class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Inicio</a>
+    <a href="menu.html">Carta</a>
+    <a href="nosotros.html">Nosotros</a>
+    <a href="reservas.html" class="btn-reserva-m">Reservar Mesa</a>
+  </nav>
+
+  <div class="admin-layout">
+    <div class="admin-header">
+      <div>
+        <div class="section-tag">Base de datos</div>
+        <h1 class="section-title">Lista de <em>Clientes</em></h1>
+      </div>
+      <div style="display:flex;gap:1rem;align-items:center;">
+        <span class="admin-count" id="totalClientes"></span>
+        <button class="btn-reload" onclick="cargarClientes()">↺ Recargar</button>
+      </div>
+    </div>
+
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Registrado</th>
+          </tr>
+        </thead>
+        <tbody id="tablaBody">
+          <tr>
+            <td colspan="5" class="estado-loading">Cargando clientes...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="footer-mini">
+    <span>© 2025 Sabor Andino · Panel Administrativo</span>
+    <a href="reservas.html">Ir a Reservas →</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    async function cargarClientes() {
+      const body = document.getElementById('tablaBody');
+      body.innerHTML = '<tr><td colspan="5" class="estado-loading">Cargando...</td></tr>';
+
+      const { data, error } = await db
+        .from('clientes')
+        .select('*')
+        .order('fecha_registro', { ascending: false });
+
+      if (error) {
+        body.innerHTML = `<tr><td colspan="5" class="estado-error">Error: ${error.message}</td></tr>`;
+        return;
+      }
+
+      document.getElementById('totalClientes').textContent =
+        `${data.length} cliente${data.length !== 1 ? 's' : ''}`;
+
+      if (data.length === 0) {
+        body.innerHTML = '<tr><td colspan="5" class="estado-loading">No hay clientes registrados aún.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = data.map((c, i) => `
+        <tr>
+          <td style="opacity:.5">${i + 1}</td>
+          <td class="td-nombre">${c.nombre} ${c.apellido}</td>
+          <td class="td-email"><a href="mailto:${c.email}">${c.email}</a></td>
+          <td>${c.telefono || '—'}</td>
+          <td class="td-fecha">${formatearFecha(c.fecha_registro)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function formatearFecha(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    cargarClientes();
+  </script>
+</body>
+</html>

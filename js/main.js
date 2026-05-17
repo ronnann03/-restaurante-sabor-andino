@@ -62,15 +62,96 @@ function selHorario(btn) {
   btn.classList.add('selected');
 }
 
-function submitReserva() {
+function parsearPersonas(texto) {
+  const n = parseInt(texto);
+  return isNaN(n) ? 11 : n;
+}
+
+function parsearHora(texto) {
+  const m = texto.match(/(\d+):(\d+)(am|pm)/i);
+  if (!m) return '12:00:00';
+  let h = parseInt(m[1]);
+  const period = m[3].toLowerCase();
+  if (period === 'pm' && h !== 12) h += 12;
+  if (period === 'am' && h === 12) h = 0;
+  return `${String(h).padStart(2, '0')}:${m[2]}:00`;
+}
+
+async function submitReserva() {
   const nombre   = document.getElementById('nombre')?.value.trim();
+  const apellido = document.getElementById('apellido')?.value.trim();
   const email    = document.getElementById('email')?.value.trim();
+  const telefono = document.getElementById('telefono')?.value.trim();
   const fecha    = document.getElementById('fecha')?.value;
   const personas = document.getElementById('personas')?.value;
+  const ocasion  = document.getElementById('ocasion')?.value;
+  const notas    = document.getElementById('notas')?.value.trim();
   const horario  = document.querySelector('.horario-btn.selected');
 
   if (!nombre || !email || !fecha || !personas || !horario) {
     alert('Por favor completa todos los campos y selecciona un horario.');
+    return;
+  }
+
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = 'Confirmando...';
+  btn.disabled = true;
+
+  // 1. Upsert cliente (crea o actualiza por email)
+  const { data: cliente, error: errCliente } = await db
+    .from('clientes')
+    .upsert(
+      { nombre, apellido: apellido || '', email, telefono: telefono || '' },
+      { onConflict: 'email' }
+    )
+    .select('id')
+    .single();
+
+  if (errCliente) {
+    alert('Error al registrar cliente: ' + errCliente.message);
+    btn.textContent = 'Confirmar Reserva';
+    btn.disabled = false;
+    return;
+  }
+
+  // 2. Buscar mesa disponible con capacidad suficiente
+  const numPersonas = parsearPersonas(personas);
+  const { data: mesa, error: errMesa } = await db
+    .from('mesas')
+    .select('id')
+    .gte('capacidad', numPersonas)
+    .eq('estado', 'disponible')
+    .limit(1)
+    .maybeSingle();
+
+  if (errMesa || !mesa) {
+    alert('No hay mesas disponibles para esa cantidad de personas. Llámanos al (01) 234-5678.');
+    btn.textContent = 'Confirmar Reserva';
+    btn.disabled = false;
+    return;
+  }
+
+  // 3. Insertar reserva
+  const notaFinal = [
+    ocasion ? `Ocasión: ${ocasion}` : '',
+    notas
+  ].filter(Boolean).join(' · ');
+
+  const { error: errReserva } = await db
+    .from('reservas')
+    .insert({
+      cliente_id:    cliente.id,
+      mesa_id:       mesa.id,
+      fecha_reserva: fecha,
+      hora_reserva:  parsearHora(horario.textContent.trim()),
+      num_personas:  numPersonas,
+      notas:         notaFinal || null
+    });
+
+  if (errReserva) {
+    alert('Error al crear la reserva: ' + errReserva.message);
+    btn.textContent = 'Confirmar Reserva';
+    btn.disabled = false;
     return;
   }
 
